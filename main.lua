@@ -1,6 +1,6 @@
 #!/usr/bin/lua5.1
 
--- function
+-- functions
 function getch_unix() 
 	os.execute("stty cbreak </dev/tty >/dev/tty 2>&1") 
 	local key = io.read(1) 
@@ -14,4 +14,7 @@ local term = require "term"
 -- aleises
 local colours = term.colors
 
-print(colours.red .. "R" .. colours.green .. "G" .. colours.blue .. "B" .. colours.reset)
+for i = 1, 10 do
+	print(colours.white .. "W" .. colours.red .. "R" .. colours.green .. "G" .. colours.blue .. "B" .. colours.reverse)
+	print(colours.black .. "K" .. colours.magenta .. "M" .. colours.yellow .. "Y" .. colours.cyan .. "C" .. colours.reset)
+end
