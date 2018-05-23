@@ -1,20 +1,51 @@
 #!/usr/bin/lua5.1
 
 -- functions
-function getch_unix() 
+function getKey()
 	os.execute("stty cbreak </dev/tty >/dev/tty 2>&1") 
 	local key = io.read(1) 
 	os.execute("stty -cbreak </dev/tty >/dev/tty 2>&1")
+	draw.currentLine()
 	return key
 end
 
+function getRes()
+
+	os.execute("stty -a | grep rows | sed \'s/;/\\n/g\' | grep -e rows -e columns > tmp.txt")
+	local f = io.open("tmp.txt")
+	local xRes, yRes = f:read("*line"), f:read("*line")
+	xRes, yRes = string.sub(xRes, 7, string.len(xRes)), string.sub(yRes, 10, string.len(yRes))
+
+	return yRes, xRes
+
+end
+
 -- requirements
-local term = require "term"
+term = require "term"
+buffer = require "buffer"
+cursor = require "cursor"
+draw = require "draw"
+update = require "update"
 
 -- aleises
-local colours = term.colors
+colours = term.colors
 
-for i = 1, 10 do
-	print(colours.white .. "W" .. colours.red .. "R" .. colours.green .. "G" .. colours.blue .. "B" .. colours.reverse)
-	print(colours.black .. "K" .. colours.magenta .. "M" .. colours.yellow .. "Y" .. colours.cyan .. "C" .. colours.reset)
+-- open file
+buffer.open("testFile.txt")
+
+-- prepare screen
+draw.drawAll()
+
+-- main loop
+running = true
+while running do
+
+	draw.draw()
+	update(getKey())
+
 end
+
+term.clear()
+os.execute("clear")
+term.cursor.jump(1, 1)
+
