@@ -9,7 +9,7 @@ currently lua nano only has 2 keyboard shortcuts:
 * ^O writes the current buffer to a file
 * ^X closes the editor **_WITHOUT_** saving
 
-other than that the editor uses standered up/down/left/right to move the cursor and typeing works fine. However currently lua nano does not support the enter or tab keys.
+other than that the editor uses standered up/down/left/right to move the cursor and typeing works fine. However currently lua nano does not support the enter key.
 
 ### downloading
 There is no easy way of getting a release currently.
