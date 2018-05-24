@@ -12,7 +12,7 @@ function draw.topBar()
 	end
 
 	term.cursor.jump(1, 3)
-	io.write("lua nano p0.1.0")
+	io.write("lua nano p0.2.0")
 
 	io.write(colours.onblack .. "")
 	local time = os.date("%a:%b:%d %I:%M")
@@ -28,7 +28,6 @@ end
 
 function draw.fullText()
 
-	term.cursor.jump(5, 5)
 	for n, l in ipairs(buffer.getLines(scroll+1, yRes-3)) do
 		term.cursor.jump(n+1, 1)
 		io.write(l)
@@ -52,9 +51,35 @@ function draw.currentLine()
 
 	term.cursor.jump(curPos+1, 1)
 	term.cleareol()
-	io.write(buffer.getLines(cursor.y, 10)[1])
+	io.write(buffer.getLines(cursor.y)[1])
 
 	term.cursor.jump(curPos+1, cursor.x)
+
+end
+
+function draw.save()
+
+	term.cursor.jump(yRes, 1)
+	io.write(colours.reverse .. "")
+	for i = 1, xRes do
+		io.write(" ")
+	end
+	term.cursor.jump(yRes, 1)
+	io.write("File name to write [" .. buffer.getName() .. "]: ")
+	local name = io.read()
+	if name ~= "" then
+		buffer.setName(name)
+	end
+
+	draw.drawAll()
+
+end
+
+function draw.status()
+
+	local statusText = status.get()
+	term.cursor.jump(yRes, xRes/2-string.len(statusText)/2)
+	io.write(colours.red .. colours.onblack .. statusText .. colours.reset)
 
 end
 
@@ -62,12 +87,14 @@ function draw.drawAll()
 	xRes, yRes = getRes()
 	os.execute("clear")
 	draw.topBar()
+	draw.status()
 	draw.fullText()
 end
 
 function draw.draw()
 	xRes, yRes = getRes()
 	draw.topBar()
+	draw.status()
 	draw.currentLine()
 end
 

@@ -18,9 +18,20 @@ function update(char)
 		end
 	elseif byte == 24 then
 		running = false
+	elseif byte == 127 then
+		buffer.erase()
+		cursor.move(-1, 0)
+	elseif byte == 15 then
+		draw.save()
+		buffer.write()
 	else
 		buffer.writeString(char, cursor.y, cursor.x)
 		cursor.move(1, 0)
+	end
+
+	local tmpLen = 1+string.len(buffer.getLines(cursor.y)[1])
+	if cursor.x > tmpLen then
+		cursor.jump(tmpLen, cursor.y)
 	end
 
 end

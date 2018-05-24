@@ -21,6 +21,7 @@ function getRes()
 end
 
 -- requirements
+status = require "status"
 term = require "term"
 buffer = require "buffer"
 cursor = require "cursor"
@@ -31,7 +32,9 @@ update = require "update"
 colours = term.colors
 
 -- open file
-buffer.open("testFile.txt")
+if #arg > 0 then
+	buffer.open(arg[1])
+end
 
 -- prepare screen
 draw.drawAll()
