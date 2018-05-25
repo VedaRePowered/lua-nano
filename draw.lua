@@ -6,18 +6,17 @@ function draw.topBar()
 
 	term.cursor.jump(1, 1)
 
-	io.write(colours.reverse .. "")
+	io.write(colours.dim .. colours.reverse)
 	for i = 1, xRes do
 		io.write(" ")
 	end
 
 	term.cursor.jump(1, 3)
-	io.write("lua nano p0.2.2")
+	io.write("lua nano p0.3.0")
 
-	io.write(colours.onblack .. "")
 	local time = os.date("%a:%b:%d %I:%M")
 	term.cursor.jump(1, xRes/2-string.len(time)/2)
-	io.write(time .. colours.reset .. colours.reverse)
+	io.write(time)
 
 	term.cursor.jump(1, xRes-1-string.len(buffer.getName()))
 	io.write(buffer.getName())
@@ -78,17 +77,21 @@ end
 function draw.status()
 
 	local statusText = status.get()
+	term.cursor.jump(yRes, 1)
+	term.cleareol()
 	term.cursor.jump(yRes, xRes/2-string.len(statusText)/2)
-	io.write(colours.red .. colours.onblack .. statusText .. colours.reset)
+	io.write(colours.dim .. colours.reverse .. colours.onred .. statusText .. colours.reset)
 
 end
 
 function draw.drawAll()
 	xRes, yRes = getRes()
 	os.execute("clear")
+	term.clear()
 	draw.topBar()
 	draw.status()
 	draw.fullText()
+	draw.currentLine()
 end
 
 function draw.draw()

@@ -13,17 +13,29 @@ function update(char)
 			end
 		elseif arrow == "C" then
 			local line = buffer.getLines(cursor.y)[1]
-			if string.sub(line, cursor.x, cursor.x+3) == "    " then
-				cursor.move(4, 0)
+			if cursor.x <= string.len(line) then
+				if string.sub(line, cursor.x, cursor.x+3) == "    " then
+					cursor.move(4, 0)
+				else
+					cursor.move(1, 0)
+				end
 			else
-				cursor.move(1, 0)
+				if buffer.getLines(cursor.y+1)[1] then
+					cursor.jump(1, cursor.y+1)
+				end
 			end
 		elseif arrow == "D" then
 			local line = buffer.getLines(cursor.y)[1]
-			if string.sub(line, cursor.x-4, cursor.x-1) == "    " then
-				cursor.move(-4, 0)
+			if cursor.x > 1 then
+				if string.sub(line, cursor.x-4, cursor.x-1) == "    " then
+					cursor.move(-4, 0)
+				else
+					cursor.move(-1, 0)
+				end
 			else
-				cursor.move(-1, 0)
+				if buffer.getLines(cursor.y-2)[1] then
+					cursor.jump(string.len(buffer.getLines(cursor.y)[1]), cursor.y-1)
+				end
 			end
 		end
 	elseif byte == 24 then
@@ -38,6 +50,12 @@ function update(char)
 				buffer.erase()
 				cursor.move(-1, 0)
 			end
+		elseif cursor.y > 1 then
+			local ncx = string.len(buffer.getLines(cursor.y-1)[1])+1
+			buffer.eraseLine()
+			term.cursor.jump(30, 50)
+			cursor.jump(ncx, cursor.y-1)
+			draw.drawAll()
 		end
 	elseif byte == 15 then
 		draw.save()
@@ -45,6 +63,10 @@ function update(char)
 	elseif byte == 9 then
 		buffer.writeString("    ", cursor.y, cursor.x)
 		cursor.move(4, 0)
+	elseif byte == 10 then
+		buffer.newLine()
+		cursor.jump(1, cursor.y+1)
+		draw.drawAll()
 	else
 		buffer.writeString(char, cursor.y, cursor.x)
 		cursor.move(1, 0)

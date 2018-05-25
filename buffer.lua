@@ -62,7 +62,7 @@ function buffer.getLines(start, amount)
 
 end
 
-function buffer.writeString(write, y, x)
+function buffer.writeString(write, y, x, insert)
 	local lines = currentBuffer.lines
 
 	if not y then y = 1 end
@@ -71,7 +71,11 @@ function buffer.writeString(write, y, x)
 		lines[y] = ""
 	end
 
-	lines[y] = string.sub(lines[y], 1, x-1) .. write .. string.sub(lines[y], x-1+string.len(write), string.len(lines[y]))
+	if insert then
+		lines[y] = string.sub(lines[y], 1, x-1) .. write .. string.sub(lines[y], x+string.len(write), string.len(lines[y]))
+	else
+		lines[y] = string.sub(lines[y], 1, x-1) .. write .. string.sub(lines[y], x, string.len(lines[y]))
+	end
 end
 
 function buffer.getName()
@@ -93,6 +97,11 @@ function buffer.erase(len, y)
 
 end
 
+function buffer.eraseLine()
+	local lines = currentBuffer.lines
+	lines[cursor.y-1] = lines[cursor.y-1] .. table.remove(lines, cursor.y)
+end
+
 function buffer.write()
 	local stringBuffer = ""
 	for n, l in ipairs(currentBuffer.lines) do
@@ -106,6 +115,16 @@ function buffer.write()
 	f:close()
 
 	status.set("Saved As " .. currentBuffer.name)
+
+end
+
+function buffer.newLine()
+
+	local lines = currentBuffer.lines
+
+	local newLine = string.sub(lines[cursor.y], cursor.x, string.len(lines[cursor.y]))
+	lines[cursor.y] = string.sub(lines[cursor.y], 1, cursor.x-1)
+	table.insert(lines, cursor.y+1, newLine)
 
 end
 
