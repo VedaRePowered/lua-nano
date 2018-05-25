@@ -11,10 +11,11 @@ end
 
 function getRes()
 
-	os.execute("stty -a | grep rows | sed \'s/;/\\n/g\' | grep -e rows -e columns > tmp.txt")
-	local f = io.open("tmp.txt")
+	os.execute("stty -a | grep rows | sed \'s/;/\\n/g\' | grep -e rows -e columns > tmp")
+	local f = io.open("tmp")
 	local xRes, yRes = f:read("*line"), f:read("*line")
 	xRes, yRes = string.sub(xRes, 7, string.len(xRes)), string.sub(yRes, 10, string.len(yRes))
+	os.execute("rm tmp")
 
 	return yRes, xRes
 
@@ -23,13 +24,13 @@ end
 -- requirements
 status = require "status"
 term = require "term"
+colours = term.colors
+syntax = require "syntax"
+word = require "word"
 buffer = require "buffer"
 cursor = require "cursor"
 draw = require "draw"
 update = require "update"
-
--- aleises
-colours = term.colors
 
 -- open file
 if #arg > 0 then

@@ -6,13 +6,13 @@ function draw.topBar()
 
 	term.cursor.jump(1, 1)
 
-	io.write(colours.dim .. colours.reverse)
+	io.write(colours.reset .. colours.dim .. colours.reverse)
 	for i = 1, xRes do
 		io.write(" ")
 	end
 
 	term.cursor.jump(1, 3)
-	io.write("lua nano p0.3.0")
+	io.write("lua nano p0.4.0")
 
 	local time = os.date("%a:%b:%d %I:%M")
 	term.cursor.jump(1, xRes/2-string.len(time)/2)
@@ -29,7 +29,7 @@ function draw.fullText()
 
 	for n, l in ipairs(buffer.getLines(scroll+1, yRes-3)) do
 		term.cursor.jump(n+1, 1)
-		io.write(l)
+		syntax.write(l)
 	end
 
 end
@@ -50,7 +50,7 @@ function draw.currentLine()
 
 	term.cursor.jump(curPos+1, 1)
 	term.cleareol()
-	io.write(buffer.getLines(cursor.y)[1])
+	syntax.write(buffer.getLines(cursor.y)[1])
 
 	term.cursor.jump(curPos+1, cursor.x)
 

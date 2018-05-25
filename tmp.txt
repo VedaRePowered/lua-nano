@@ -1,2 +1,2 @@
- rows 40
+ rows 39
  columns 140

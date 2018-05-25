@@ -22,6 +22,9 @@ function buffer.open(file)
 	line = true
 	while line do
 		line = f:read("*line")
+		if line then
+			line = string.gsub(line, "\t", "    ")
+		end
 		lines[#lines+1] = line
 	end
 
@@ -110,7 +113,7 @@ function buffer.write()
 	local tmp = io.output()
 	local f = io.open(currentBuffer.name, "w+")
 	io.output(f)
-	io.write(stringBuffer)
+	io.write(string.gsub(stringBuffer, "    ", "\t"))
 	io.output(tmp)
 	f:close()
 

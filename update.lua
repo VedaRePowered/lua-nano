@@ -67,6 +67,8 @@ function update(char)
 		buffer.newLine()
 		cursor.jump(1, cursor.y+1)
 		draw.drawAll()
+	elseif byte == 18 then
+		draw.drawAll()
 	else
 		buffer.writeString(char, cursor.y, cursor.x)
 		cursor.move(1, 0)
