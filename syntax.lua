@@ -136,7 +136,9 @@ function syntax.write(text)
 			local hString = string.match(text, "^[\"\'].-[\"\']", i)
 			local hComment = string.match(text, "^%-%-.*", i)
 			local hFunction = string.match(text, "^(%a[_%.a-zA-Z1-9]*)%(.-%)", i)
-			local hVariable = string.match(text, "^(%a[_%.a-zA-Z1-9]*) -[,=%+%-*/^%%%.%)}$]", i)
+			local hVariable = string.match(text, "^(%a[_%.a-zA-Z1-9]*) -[,=%+%-*/^%%%.%)}]", i)
+			hVariable = string.match(text, "^(%a[_%.a-zA-Z1-9]*) -$", i) or hVariable
+			hVariable = string.match(text, "^(%a[_%.a-zA-Z1-9]*) -in", i) or hVariable
 			if string.sub(text, i, i+1) == ".." then
 				io.write(colours.bright .. colours.cyan .. "..")
 				i = i + 2

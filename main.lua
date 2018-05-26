@@ -39,6 +39,7 @@ end
 
 -- prepare screen
 draw.drawAll()
+os.execute("stty -isig -icanon -iexten -echo")
 
 -- main loop
 running = true
@@ -48,7 +49,7 @@ while running do
 	update(getKey())
 
 end
-
+os.execute("stty isig icanon iexten echo")
 term.clear()
 os.execute("clear")
 term.cursor.jump(1, 1)
