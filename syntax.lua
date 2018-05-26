@@ -74,6 +74,7 @@ wordColours["in"] = c.flow
 wordColours["then"] = c.flow
 wordColours["do"] = c.flow
 wordColours["else"] = c.flow
+wordColours["elseif"] = c.flow
 wordColours["end"] = c.flow
 wordColours["goto"] = c.flow
 wordColours["break"] = c.flow
@@ -135,8 +136,11 @@ function syntax.write(text)
 			local hString = string.match(text, "^[\"\'].-[\"\']", i)
 			local hComment = string.match(text, "^%-%-.*", i)
 			local hFunction = string.match(text, "^(%a[_%.a-zA-Z1-9]*)%(.-%)", i)
-			local hVariable = string.match(text, "^(%a[_%.a-zA-Z1-9]*) -[,=%+%-*/^%%%.%)}]", i)
-			if hFunction then
+			local hVariable = string.match(text, "^(%a[_%.a-zA-Z1-9]*) -[,=%+%-*/^%%%.%)}$]", i)
+			if string.sub(text, i, i+1) == ".." then
+				io.write(colours.bright .. colours.cyan .. "..")
+				i = i + 2
+			elseif hFunction then
 				io.write(c.func2, hFunction)
 				i = i + string.len(hFunction)
 			elseif hVariable then
