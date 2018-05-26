@@ -1,16 +1,17 @@
 local syntax = {}
 local c = {
 	flow = colours.bright .. colours.green,
-	func = colours.magenta .. "",
+	func = colours.reset .. colours.magenta,
+	func2 = colours.bright .. colours.magenta,
 	bracket = colours.dim .. colours.yellow,
-	logic = colours.yellow .. "",
+	logic = colours.reset .. colours.yellow,
 	math = colours.bright .. colours.yellow,
 	comment = colours.bright .. colours.black,
-	keyword = colours.green .. "",
+	keyword = colours.reset .. colours.green,
 	modify = colours.bright .. colours.blue,
-	string = colours.blue .. "",
-	number = colours.cyan .. "",
-	variable = colours.dim .. colours.red,
+	string = colours.reset .. colours.blue,
+	number = colours.reset .. colours.cyan,
+	variable = colours.reset .. colours.red,
 	regular = colours.reset .. ""
 }
 
@@ -74,6 +75,10 @@ wordColours["then"] = c.flow
 wordColours["do"] = c.flow
 wordColours["else"] = c.flow
 wordColours["end"] = c.flow
+wordColours["goto"] = c.flow
+wordColours["break"] = c.flow
+wordColours["repeat"] = c.flow
+wordColours["until"] = c.flow
 
 wordColours["local"] = c.modify
 wordColours["return"] = c.modify
@@ -119,7 +124,6 @@ symbolColours["0"] = c.number
 function syntax.write(text)
 	i = 1
 	while i <= string.len(text) do
-		local str = string.sub(text, i, string.len(text))
 		local y = string.sub(text, i, i)
 		local colour = symbolColours[y]
 		if colour then
@@ -127,31 +131,30 @@ function syntax.write(text)
 			io.write(y)
 			i = i + 1
 		else
-			--print(str)
-			local wordF, wordT = string.find(str, "^[_a-zA-Z][_a-zA-Z1-9]*")
-			local stringF, stringT = string.find(str, "^[\"\'].*[\"\']")
-			local commentF, commentT = string.find(str, "^%-%-.*")
-			local functionF, functionT = string.find(str, "^[_a-zA-Z][_a-zA-Z1-9]*%(.*%)")
-			if wordF then
-				local hWord = string.sub(str, wordF, wordT)
+			local hWord = string.match(text, "^[_a-zA-Z][_a-zA-Z1-9]*", i)
+			local hString = string.match(text, "^[\"\'].-[\"\']", i)
+			local hComment = string.match(text, "^%-%-.*", i)
+			local hFunction = string.match(text, "^(%a[_%.a-zA-Z1-9]*)%(.-%)", i)
+			local hVariable = string.match(text, "^(%a[_%.a-zA-Z1-9]*) -[,=%+%-*/^%%%.%)}]", i)
+			if hFunction then
+				io.write(c.func2, hFunction)
+				i = i + string.len(hFunction)
+			elseif hVariable then
+				io.write(c.variable, hVariable)
+				i = i + string.len(hVariable)
+			elseif hWord then
 				io.write(c.regular)
 				if wordColours[hWord] then
 					io.write(wordColours[hWord])
 				end
 				io.write(hWord)
 				i = i + string.len(hWord)
-			elseif stringF then
-				local hString = string.sub(str, stringF, stringT)
+			elseif hString then
 				io.write(c.string, hString)
 				i = i + string.len(hString)
-			elseif commentF then
-				local hComment = string.sub(str, commentF, commentT)
+			elseif hComment then
 				io.write(c.comment, hComment)
 				i = i + string.len(hComment)
-			elseif functionF then
-				local hFunction = string.sub(str, functionF, functionT)
-				io.write(c.func, hFunction)
-				i = i + string.len(hFunction)
 			else
 				io.write(c.regular)
 				if y == "-" then
