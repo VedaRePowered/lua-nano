@@ -12,7 +12,7 @@ function draw.topBar()
 	end
 
 	term.cursor.jump(1, 3)
-	io.write("lua nano p0.5.0")
+	io.write("lua nano p0.5.1")
 
 	local time = os.date("%a:%b:%d %I:%M")
 	term.cursor.jump(1, xRes/2-string.len(time)/2)
