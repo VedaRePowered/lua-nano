@@ -12,7 +12,7 @@ function draw.topBar()
 	end
 
 	term.cursor.jump(1, 3)
-	io.write("lua nano p0.4.3")
+	io.write("lua nano p0.5.0")
 
 	local time = os.date("%a:%b:%d %I:%M")
 	term.cursor.jump(1, xRes/2-string.len(time)/2)
@@ -59,18 +59,24 @@ end
 function draw.save()
 
 	term.cursor.jump(yRes, 1)
-	io.write(colours.reverse .. "")
+	io.write(colours.reset .. colours.dim .. colours.reverse .. "")
 	for i = 1, xRes do
 		io.write(" ")
 	end
 	term.cursor.jump(yRes, 1)
 	io.write("File name to write [" .. buffer.getName() .. "]: ")
+
+	os.execute("stty isig icanon iexten ixoff echo")
 	local name = io.read()
-	if name ~= "" then
+	os.execute("stty -isig -icanon -iexten -ixoff -echo")
+
+	if name ~= "" and string.lower(name) ~= "cancel" then
 		buffer.setName(name)
 	end
 
 	draw.drawAll()
+
+	return string.lower(name) == "cancel"
 
 end
 

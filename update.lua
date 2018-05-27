@@ -33,12 +33,12 @@ function update(char)
 					cursor.move(-1, 0)
 				end
 			else
-				if buffer.getLines(cursor.y-2)[1] then
-					cursor.jump(string.len(buffer.getLines(cursor.y)[1]), cursor.y-1)
+				if buffer.getLines(cursor.y-1)[1] then
+					cursor.jump(string.len(buffer.getLines(cursor.y-1)[1])+1, cursor.y-1)
 				end
 			end
 		end
-	elseif byte == 24 then
+	elseif byte == conf.getKey("close") then
 		running = false
 	elseif byte == 127 then
 		local line = buffer.getLines(cursor.y)[1]
@@ -57,9 +57,12 @@ function update(char)
 			cursor.jump(ncx, cursor.y-1)
 			draw.drawAll()
 		end
-	elseif byte == 15 then
-		draw.save()
-		buffer.write()
+	elseif byte == conf.getKey("save") then
+		if not draw.save() then
+			buffer.write()
+		else
+			status.set("Canceled save.")
+		end
 	elseif byte == 9 then
 		buffer.writeString("    ", cursor.y, cursor.x)
 		cursor.move(4, 0)
@@ -67,7 +70,7 @@ function update(char)
 		buffer.newLine()
 		cursor.jump(1, cursor.y+1)
 		draw.drawAll()
-	elseif byte == 18 then
+	elseif byte == conf.getKey("refresh") then
 		draw.drawAll()
 	else
 		buffer.writeString(char, cursor.y, cursor.x)

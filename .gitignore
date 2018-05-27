@@ -39,3 +39,6 @@ luac.out
 *.x86_64
 *.hex
 
+# Ben's excluded files
+
+getKeyID.lua

@@ -25,6 +25,7 @@ end
 status = require "status"
 term = require "term"
 colours = term.colors
+conf = require "confLoad"
 syntax = require "syntax"
 word = require "word"
 buffer = require "buffer"
@@ -39,7 +40,7 @@ end
 
 -- prepare screen
 draw.drawAll()
-os.execute("stty -isig -icanon -iexten -echo")
+os.execute("stty -isig -icanon -iexten -ixoff -echo")
 
 -- main loop
 running = true
@@ -49,7 +50,7 @@ while running do
 	update(getKey())
 
 end
-os.execute("stty isig icanon iexten echo")
+os.execute("stty isig icanon iexten ixoff echo")
 term.clear()
 os.execute("clear")
 term.cursor.jump(1, 1)

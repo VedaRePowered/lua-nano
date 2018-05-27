@@ -7,7 +7,7 @@ currentBuffer = {
 		"2:    Use ^X to close this file and open lua nano with a file",
 		"3:    Goto github.com/BEN1JEN/lua-nano and read the readme.md"
 	},
-	name="Untitled.txt"
+	name="welcome.txt"
 }
 
 function buffer.open(file)
@@ -113,7 +113,7 @@ function buffer.write()
 	local tmp = io.output()
 	local f = io.open(currentBuffer.name, "w+")
 	io.output(f)
-	io.write(string.gsub(stringBuffer, "    ", "\t"))
+	io.write(stringBuffer)
 	io.output(tmp)
 	f:close()
 
