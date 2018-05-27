@@ -42,3 +42,4 @@ luac.out
 # Ben's excluded files
 
 getKeyID.lua
+test.*
