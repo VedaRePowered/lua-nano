@@ -1,45 +1,47 @@
 function update(char)
 	local byte = string.byte(char)
 	if byte == 27 then
-		io.read(1)
-		local arrow = io.read(1)
-		if arrow == "A" then
-			if cursor.y > 1 then
-				cursor.move(0, -1)
-			end
-		elseif arrow == "B" then
-			if cursor.y < #buffer.getLines() then
-				cursor.move(0, 1)
-			end
-		elseif arrow == "C" then
-			local line = buffer.getLines(cursor.y)[1]
-			if cursor.x <= string.len(line) then
-				if string.sub(line, cursor.x, cursor.x+3) == "    " then
-					cursor.move(4, 0)
+		local byte = string.byte(io.read(1))
+		if byte == 91 then
+			local arrow = io.read(1)
+			if arrow == "A" then
+				if cursor.y > 1 then
+					cursor.move(0, -1)
+				end
+			elseif arrow == "B" then
+				if cursor.y < #buffer.getLines() then
+					cursor.move(0, 1)
+				end
+			elseif arrow == "C" then
+				local line = buffer.getLines(cursor.y)[1]
+				if cursor.x <= string.len(line) then
+					if string.sub(line, cursor.x, cursor.x+3) == "    " then
+						cursor.move(4, 0)
+					else
+						cursor.move(1, 0)
+					end
 				else
-					cursor.move(1, 0)
+					if buffer.getLines(cursor.y+1)[1] then
+						cursor.jump(1, cursor.y+1)
+					end
 				end
-			else
-				if buffer.getLines(cursor.y+1)[1] then
-					cursor.jump(1, cursor.y+1)
-				end
-			end
-		elseif arrow == "D" then
-			local line = buffer.getLines(cursor.y)[1]
-			if cursor.x > 1 then
-				if string.sub(line, cursor.x-4, cursor.x-1) == "    " then
-					cursor.move(-4, 0)
+			elseif arrow == "D" then
+				local line = buffer.getLines(cursor.y)[1]
+				if cursor.x > 1 then
+					if string.sub(line, cursor.x-4, cursor.x-1) == "    " then
+						cursor.move(-4, 0)
+					else
+						cursor.move(-1, 0)
+					end
 				else
-					cursor.move(-1, 0)
-				end
-			else
-				if buffer.getLines(cursor.y-1)[1] then
-					cursor.jump(string.len(buffer.getLines(cursor.y-1)[1])+1, cursor.y-1)
+					if buffer.getLines(cursor.y-1)[1] then
+						cursor.jump(string.len(buffer.getLines(cursor.y-1)[1])+1, cursor.y-1)
+					end
 				end
 			end
+		else
+			controllCombos(byte-64)
 		end
-	elseif byte == conf.getKey("close") then
-		running = false
 	elseif byte == 127 then
 		local line = buffer.getLines(cursor.y)[1]
 		if cursor.x > 1 then
@@ -57,12 +59,6 @@ function update(char)
 			cursor.jump(ncx, cursor.y-1)
 			draw.drawAll()
 		end
-	elseif byte == conf.getKey("save") then
-		if not draw.save() then
-			buffer.write()
-		else
-			status.set("Canceled save.")
-		end
 	elseif byte == 9 then
 		buffer.writeString("    ", cursor.y, cursor.x)
 		cursor.move(4, 0)
@@ -70,11 +66,11 @@ function update(char)
 		buffer.newLine()
 		cursor.jump(1, cursor.y+1)
 		draw.drawAll()
-	elseif byte == conf.getKey("refresh") then
-		draw.drawAll()
 	else
-		buffer.writeString(char, cursor.y, cursor.x)
-		cursor.move(1, 0)
+		if controllCombos(byte) then
+			buffer.writeString(char, cursor.y, cursor.x)
+			cursor.move(1, 0)
+		end
 	end
 
 	local tmpLen = 1+string.len(buffer.getLines(cursor.y)[1])
@@ -85,6 +81,40 @@ function update(char)
 		cursor.jump(1, cursor.y)
 	end
 
+end
+
+function controllCombos(byte)
+	local r = false
+	if byte == conf.getKey("refresh") then
+		draw.drawAll()
+	elseif byte == conf.getKey("close") then
+		running = false
+	elseif byte == conf.getKey("save") then
+		if not draw.save() then
+			buffer.write()
+		else
+			status.set("Canceled save.")
+		end
+	elseif byte == conf.getKey("find") then
+		local text = draw.find()
+		find.find(text, find.regularFindFunction)
+		draw.drawAll()
+	elseif byte == conf.getKey("replace") then
+		local text, replace = draw.replace()
+		find.replace(text, replace, find.regularFindFunction, find.regularReplaceFunction)
+	elseif byte == conf.getKey("advFind") then
+		local text = draw.find()
+		find.find(text, find.advancedFindFunction)
+		draw.drawAll()
+	elseif byte == conf.getKey("advReplace") then
+		local text, replace = draw.replace()
+		find.replace(text, replace, find.advancedFindFunction, find.advancedReplaceFunction)
+	elseif byte == conf.getKey("next") then
+		find.next()
+	else
+		r = true
+	end
+	return r
 end
 
 return update

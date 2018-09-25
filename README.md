@@ -13,4 +13,4 @@ other than that the editor uses standered up/down/left/right to move the cursor 
 
 ### downloading
 There is no easy way of getting a release currently.
-You can run it if you have lua5.1 installed and the luarocks pakage `lua-term`. Then, in the projects directory, simply type `./main.lua` to open the editor or `./main.lua file.txt` to open a spicific file.
+You can run it if you have lua5.3 installed and the luarocks pakage `lua-term`. Then, in the projects directory, simply type `./main.lua` to open the editor or `./main.lua file.txt` to open a spicific file.

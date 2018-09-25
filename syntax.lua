@@ -95,7 +95,7 @@ l["symbolColours"]["*"] = c.math
 l["symbolColours"]["/"] = c.math
 l["symbolColours"]["^"] = c.math
 l["symbolColours"]["%"] = c.math
-l["symbolColours"][","] = c.variable
+l["symbolColours"][","] = c.keywords
 l["symbolColours"]["#"] = c.variable
 l["symbolColours"]["."] = c.keywords
 l["symbolColours"]["="] = c.logic

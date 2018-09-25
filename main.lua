@@ -1,4 +1,4 @@
-#!/usr/bin/lua5.1
+#!/usr/bin/lua5.3
 
 -- functions
 function getKey()
@@ -21,6 +21,23 @@ function getRes()
 
 end
 
+-- log stuff
+os.execute("rm log.out && touch log.out")
+function log(strs, dbt)
+	if not dbt then
+		dbt = "PNT"
+	end
+	local out = ""
+	if type(strs) == "table" then
+		for i, s in ipairs(strs) do
+			out = out .. s
+		end
+	else
+		out = strs
+	end
+	os.execute("echo \"[" .. dbt .. "]" .. out .. "\" >> log.out")
+end
+
 -- requirements
 status = require "status"
 term = require "term"
@@ -32,6 +49,7 @@ buffer = require "buffer"
 cursor = require "cursor"
 draw = require "draw"
 update = require "update"
+find = require "find"
 
 -- open file
 if #arg > 0 then

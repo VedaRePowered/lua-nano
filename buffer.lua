@@ -2,7 +2,7 @@ buffer = {}
 currentBuffer = {
 	lines = {
 		"Welcome to lua nano!",
-		"to start using lua nano do one of the following: ",
+		"to start using lua nano do one of the following:",
 		"1:    Erase this then use ^o to save the file with a new name",
 		"2:    Use ^X to close this file and open lua nano with a file",
 		"3:    Goto github.com/BEN1JEN/lua-nano and read the readme.md"

@@ -21,5 +21,5 @@ for i = 1, 10 do -- loop 10 times incrementing i each time
 end -- close the loop
 
 for k, v in pairs(list) do -- loop thrugh all the items in the list
-    say(k .. " is " .. v) -- print what each item is
+    say(k .. " is " .. v) -- say what each item is
 end -- close the loop

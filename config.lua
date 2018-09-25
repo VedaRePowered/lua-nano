@@ -20,13 +20,21 @@ t.colours = {
 	boldItalic = "magenta",
 	link = "cyan light",
 	bullet = "black light",
-	heading = "yellow"
+	heading = "yellow",
+	topBar = "regular dark reverse",
+	status = "regular dark on red reverse",
+	lowerBar = "regular dark reverse"
 }
 
 t.keys = {
 	close = "X",
 	save = "O",
-	refresh = "R"
+	refresh = "R",
+	find = "F",
+	next = "N",
+	replace = "G",
+	advFind = "f",
+	advReplace = "" -- I'll have to fix this, but currently adcanced replace doesn't work, so just don't use it
 }
 
 return t
